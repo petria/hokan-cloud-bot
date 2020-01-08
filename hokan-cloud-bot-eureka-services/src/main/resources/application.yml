@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: hokan-cloud-bot-eureka-services
+
+server:
+  port: 8002
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
