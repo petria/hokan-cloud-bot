@@ -1,16 +1,22 @@
 package org.freakz.hokan.cloud.bot.eureka.io.ircengine;
 
 import lombok.extern.slf4j.Slf4j;
+import org.freakz.hokan.cloud.bot.common.model.event.RawIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
+import org.freakz.hokan.cloud.bot.eureka.io.service.HokanCoreRuntimeServiceImpl;
 import org.jibble.pircbot.PircBot;
 
 @Slf4j
 public class HokanCore extends PircBot {
 
     private final IrcServerConfigModel ircServerConfig;
+    private final HokanCoreRuntimeServiceImpl hokanCoreRuntimeService;
 
-    public HokanCore(IrcServerConfigModel ircServerConfig, String botName) {
+    public HokanCore(IrcServerConfigModel ircServerConfig, String botName, HokanCoreRuntimeServiceImpl hokanCoreRuntimeService) {
+
         this.ircServerConfig = ircServerConfig;
+        this.hokanCoreRuntimeService = hokanCoreRuntimeService;
+
         setVerbose(true);
         setName(botName);
         setVersion("0.0.1");
@@ -25,9 +31,31 @@ public class HokanCore extends PircBot {
         }
     }
 
-
     @Override
     protected void onConnect() {
         log.debug("Connected!");
+    }
+
+    @Override
+    protected void onMessage(String channel, String sender, String login, String hostname, String message, byte[] original) {
+        super.onMessage(channel, sender, login, hostname, message, original);
+
+        RawIRCEvent event = builderEvent(this.ircServerConfig.getUniqueIdent(), "MESSAGE")
+                .parameter(channel)
+                .parameter(sender)
+                .parameter(login)
+                .parameter(hostname)
+                .parameter(message);
+
+        hokanCoreRuntimeService.publishRawIRCEvent(event);
+    }
+
+    private RawIRCEvent builderEvent(String uniqueIdent, String type) {
+        return new RawIRCEvent(uniqueIdent, type);
+    }
+
+    @Override
+    protected void onPrivateMessage(String sender, String login, String hostname, String message, byte[] original) {
+        super.onPrivateMessage(sender, login, hostname, message, original);
     }
 }

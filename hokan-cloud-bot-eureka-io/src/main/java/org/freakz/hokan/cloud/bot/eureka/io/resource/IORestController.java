@@ -24,10 +24,7 @@ public class IORestController implements IOResource {
         this.connectionManager = connectionManager;
     }
 
-
     @Override
-//    @RequestMapping(method = GET, value = "/servers")
-//    @ResponseBody
     public List<IrcServerConfigModel> getConfiguredIRCServers() {
         return connectionManager.getConfiguredIRCServers();
     }
