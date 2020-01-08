@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -40,7 +39,7 @@ public class DevProfileConfig implements CommandLineRunner {
         network = networkRepository.save(network);
 
         config.setNetwork(network);
-        config.setServer("localhost");
+        config.setServer("hpelite.lan");
         config.setPort(1100);
 
         configRepository.save(config);

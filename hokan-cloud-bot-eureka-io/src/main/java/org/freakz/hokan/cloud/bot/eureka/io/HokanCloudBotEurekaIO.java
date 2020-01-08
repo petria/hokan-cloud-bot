@@ -17,14 +17,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 public class HokanCloudBotEurekaIO {
 
-/*    @Bean
-    public Contract useFeignAnnotations() {
-        return new Contract.Default();
-    }
-*/
-//    @Autowired
-//    private ServicesClient client;
-
     @Value("${spring.application.name}")
     private String appName;
 

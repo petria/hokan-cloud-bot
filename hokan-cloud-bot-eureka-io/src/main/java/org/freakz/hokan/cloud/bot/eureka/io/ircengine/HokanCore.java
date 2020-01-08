@@ -1,6 +1,7 @@
 package org.freakz.hokan.cloud.bot.eureka.io.ircengine;
 
 import lombok.extern.slf4j.Slf4j;
+import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRC;
 import org.freakz.hokan.cloud.bot.common.model.event.RawIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
 import org.freakz.hokan.cloud.bot.eureka.io.service.HokanCoreRuntimeServiceImpl;
@@ -57,5 +58,15 @@ public class HokanCore extends PircBot {
     @Override
     protected void onPrivateMessage(String sender, String login, String hostname, String message, byte[] original) {
         super.onPrivateMessage(sender, login, hostname, message, original);
+    }
+
+    public String getUniqueIdent() {
+        return ircServerConfig.getUniqueIdent();
+    }
+
+    public boolean sendMessageToIRC(MessageToIRC messageToIRC) {
+        String channel = messageToIRC.getChannel();
+        sendMessage(channel, messageToIRC.getMessage());
+        return true;
     }
 }

@@ -3,6 +3,7 @@ package org.freakz.hokan.cloud.bot.eureka.io.resource;
 import lombok.extern.slf4j.Slf4j;
 import org.freakz.hokan.cloud.bot.common.api.io.IOResource;
 import org.freakz.hokan.cloud.bot.common.model.ServiceResponse;
+import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRC;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
 import org.freakz.hokan.cloud.bot.eureka.io.service.ConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,12 @@ public class IORestController implements IOResource {
         } else {
             return ServiceResponse.builder().status(INTERNAL_SERVER_ERROR.value()).response("ERROR").build();
         }
+    }
+
+    @Override
+    public void postMessageToIRC(MessageToIRC messageToIRC) {
+        boolean ok = connectionManager.sendMessageToIRC(messageToIRC);
+        log.debug("post: {}", ok);
     }
 
 
