@@ -7,8 +7,14 @@ import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
 import org.freakz.hokan.cloud.bot.eureka.io.service.HokanCoreRuntimeServiceImpl;
 import org.jibble.pircbot.PircBot;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Slf4j
 public class HokanCore extends PircBot {
+
+    private static long transactionId = 0;
+    private static final Map<Long, Long> transactionTimesMap = new ConcurrentHashMap<>();
 
     private final IrcServerConfigModel ircServerConfig;
     private final HokanCoreRuntimeServiceImpl hokanCoreRuntimeService;
@@ -37,11 +43,18 @@ public class HokanCore extends PircBot {
         log.debug("Connected!");
     }
 
+    private static long getAndStoreTransactionId() {
+        transactionId++;
+        transactionTimesMap.put(transactionId, System.currentTimeMillis());
+        return transactionId;
+    }
+
     @Override
     protected void onMessage(String channel, String sender, String login, String hostname, String message, byte[] original) {
         super.onMessage(channel, sender, login, hostname, message, original);
 
         RawIRCEvent event = builderEvent(this.ircServerConfig.getUniqueIdent(), "MESSAGE")
+                .transactionId(getAndStoreTransactionId())
                 .parameter(channel)
                 .parameter(sender)
                 .parameter(login)
@@ -67,6 +80,12 @@ public class HokanCore extends PircBot {
     public boolean sendMessageToIRC(MessageToIRC messageToIRC) {
         String channel = messageToIRC.getChannel();
         sendMessage(channel, messageToIRC.getMessage());
+        Long startMillis = transactionTimesMap.remove(messageToIRC.getTransactionId());
+        if (startMillis != null) {
+            long diff = System.currentTimeMillis() - startMillis;
+            String diffStr = String.format("transactionId: %d handling time: %d ms", messageToIRC.getTransactionId(), diff);
+            log.debug(":: {}", diffStr);
+        }
         return true;
     }
 }

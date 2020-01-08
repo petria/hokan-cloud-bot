@@ -10,6 +10,8 @@ public class MessageToIRC {
     public MessageToIRC() {
     }
 
+    private long transactionId;
+
     private String target;
 
     private String channel;

@@ -22,12 +22,13 @@ public class CommandHandlerServiceServiceImpl implements CommandHandlerService {
     public void handleMessage(RawIRCEvent event) {
         String line = event.getParameters().get("4");
         if (line.equals("!ping")) {
-            sendReply("pong", event.getSource(), event.getParameters().get("0"));
+            sendReply("pong", event.getSource(), event.getParameters().get("0"), event.getTransactionId());
         }
     }
 
-    private void sendReply(String reply, String target, String channel) {
+    private void sendReply(String reply, String target, String channel, long transactionId) {
         MessageToIRC message = new MessageToIRC();
+        message.setTransactionId(transactionId);
         message.setMessage(reply);
         message.setTarget(target);
         message.setChannel(channel);
