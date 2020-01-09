@@ -55,7 +55,7 @@ public class IORestController implements IOResource {
     @Override
     public void postMessageToIRC(MessageToIRC messageToIRC) {
         boolean ok = connectionManager.sendMessageToIRC(messageToIRC);
-        log.debug("post: {}", ok);
+//        log.debug("post: {}", ok);
     }
 
 
