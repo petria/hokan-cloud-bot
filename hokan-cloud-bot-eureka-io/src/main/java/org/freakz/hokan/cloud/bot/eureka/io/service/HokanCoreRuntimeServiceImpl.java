@@ -64,6 +64,12 @@ public class HokanCoreRuntimeServiceImpl implements HokanCoreRuntimeService {
         }
     }
 
+    @Override
+    public void coreDisconnected(HokanCore hokanCore) {
+        disconnectInstance(hokanCore);
+    }
+
+    @Override
     public void publishRawIRCEvent(RawIRCEvent event) {
         log.debug("Publish event from: {} - TYPE: {}", event.getSource(), event.getType());
         try {

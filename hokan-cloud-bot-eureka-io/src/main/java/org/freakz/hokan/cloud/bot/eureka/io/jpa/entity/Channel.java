@@ -20,7 +20,7 @@ public class Channel implements Serializable {
     @Column(name = "ID")
     private long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "NETWORK_ID_FK", referencedColumnName = "ID")
     private Network network;

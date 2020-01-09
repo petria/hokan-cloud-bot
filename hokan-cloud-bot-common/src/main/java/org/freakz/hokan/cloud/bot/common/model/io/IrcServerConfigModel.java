@@ -11,6 +11,9 @@ public class IrcServerConfigModel {
     private String serverPassword;
     private int port;
 
+    private boolean connectOnStartup;
+    private boolean doReconnect;
+
     public String getUniqueIdent() {
         return String.format("%s-%s-%d", network, server, port);
     }

@@ -3,16 +3,16 @@ package org.freakz.hokan.cloud.bot.eureka.io.ircengine;
 import lombok.extern.slf4j.Slf4j;
 import org.freakz.hokan.cloud.bot.common.model.event.RawIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
-import org.freakz.hokan.cloud.bot.eureka.io.service.HokanCoreRuntimeServiceImpl;
+import org.freakz.hokan.cloud.bot.eureka.io.service.HokanCoreRuntimeService;
 import org.jibble.pircbot.PircBot;
 
 @Slf4j
 public class HokanCore extends PircBot {
 
     private final IrcServerConfigModel ircServerConfig;
-    private final HokanCoreRuntimeServiceImpl hokanCoreRuntimeService;
+    private final HokanCoreRuntimeService hokanCoreRuntimeService;
 
-    public HokanCore(IrcServerConfigModel ircServerConfig, String botName, HokanCoreRuntimeServiceImpl hokanCoreRuntimeService) {
+    public HokanCore(IrcServerConfigModel ircServerConfig, String botName, HokanCoreRuntimeService hokanCoreRuntimeService) {
 
         this.ircServerConfig = ircServerConfig;
         this.hokanCoreRuntimeService = hokanCoreRuntimeService;
@@ -34,6 +34,11 @@ public class HokanCore extends PircBot {
     @Override
     protected void onConnect() {
         log.debug("Connected!");
+    }
+
+    @Override
+    protected void onDisconnect() {
+        hokanCoreRuntimeService.coreDisconnected(this);
     }
 
     @Override

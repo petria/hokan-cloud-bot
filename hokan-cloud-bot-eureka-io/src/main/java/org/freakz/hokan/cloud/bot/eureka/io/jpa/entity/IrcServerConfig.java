@@ -18,7 +18,7 @@ public class IrcServerConfig implements Serializable {
     @Column(name = "ID")
     private long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "NETWORK_ID_FK", referencedColumnName = "ID")
     private Network network;
 
