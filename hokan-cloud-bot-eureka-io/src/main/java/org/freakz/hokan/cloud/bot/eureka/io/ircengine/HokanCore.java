@@ -1,13 +1,20 @@
 package org.freakz.hokan.cloud.bot.eureka.io.ircengine;
 
 import lombok.extern.slf4j.Slf4j;
+import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRC;
 import org.freakz.hokan.cloud.bot.common.model.event.RawIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
 import org.freakz.hokan.cloud.bot.eureka.io.service.HokanCoreRuntimeService;
 import org.jibble.pircbot.PircBot;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Slf4j
 public class HokanCore extends PircBot {
+
+    private static long transactionId = 0;
+    private static final Map<Long, Long> transactionTimesMap = new ConcurrentHashMap<>();
 
     private final IrcServerConfigModel ircServerConfig;
     private final HokanCoreRuntimeService hokanCoreRuntimeService;
@@ -36,6 +43,12 @@ public class HokanCore extends PircBot {
         log.debug("Connected!");
     }
 
+    private static long getAndStoreTransactionId() {
+        transactionId++;
+        transactionTimesMap.put(transactionId, System.currentTimeMillis());
+        return transactionId;
+    }
+
     @Override
     protected void onDisconnect() {
         hokanCoreRuntimeService.coreDisconnected(this);
@@ -46,6 +59,7 @@ public class HokanCore extends PircBot {
         super.onMessage(channel, sender, login, hostname, message, original);
 
         RawIRCEvent event = builderEvent(this.ircServerConfig.getUniqueIdent(), "MESSAGE")
+                .transactionId(getAndStoreTransactionId())
                 .parameter(channel)
                 .parameter(sender)
                 .parameter(login)
@@ -62,5 +76,21 @@ public class HokanCore extends PircBot {
     @Override
     protected void onPrivateMessage(String sender, String login, String hostname, String message, byte[] original) {
         super.onPrivateMessage(sender, login, hostname, message, original);
+    }
+
+    public String getUniqueIdent() {
+        return ircServerConfig.getUniqueIdent();
+    }
+
+    public boolean sendMessageToIRC(MessageToIRC messageToIRC) {
+        String channel = messageToIRC.getChannel();
+        sendMessage(channel, messageToIRC.getMessage());
+        Long startMillis = transactionTimesMap.remove(messageToIRC.getTransactionId());
+        if (startMillis != null) {
+            long diff = System.currentTimeMillis() - startMillis;
+            String diffStr = String.format("transactionId: %d handling time: %d ms", messageToIRC.getTransactionId(), diff);
+            log.debug(":: {}", diffStr);
+        }
+        return true;
     }
 }

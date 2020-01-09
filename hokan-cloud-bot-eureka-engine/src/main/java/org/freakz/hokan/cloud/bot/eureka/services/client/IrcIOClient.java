@@ -1,18 +1,18 @@
 package org.freakz.hokan.cloud.bot.eureka.services.client;
 
-import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
+import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRC;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @FeignClient("HOKAN-CLOUD-BOT-EUREKA-IO")
 public interface IrcIOClient {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/servers")
+    @RequestMapping(method = POST, value = "/post-message")
     @ResponseBody
-    List<IrcServerConfigModel> serviceRequest();
+    void postMessageToIRC(@RequestBody MessageToIRC messageToIRC);
 
 }

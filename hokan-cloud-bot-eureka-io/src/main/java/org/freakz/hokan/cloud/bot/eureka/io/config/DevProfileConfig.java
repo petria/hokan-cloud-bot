@@ -39,7 +39,7 @@ public class DevProfileConfig implements CommandLineRunner {
 //        network = networkRepository.save(network);
 
         config.setNetwork(network);
-        config.setServer("localhost");
+        config.setServer("hpelite.lan");
         config.setPort(1100);
         config.setIrcServerConfigState(IrcServerConfigState.CONNECTED);
 

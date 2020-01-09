@@ -1,7 +1,9 @@
 package org.freakz.hokan.cloud.bot.eureka.io.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRC;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
+import org.freakz.hokan.cloud.bot.eureka.io.ircengine.HokanCore;
 import org.freakz.hokan.cloud.bot.eureka.io.jpa.entity.IrcServerConfig;
 import org.freakz.hokan.cloud.bot.eureka.io.jpa.repository.IrcServerConfigRepository;
 import org.modelmapper.ModelMapper;
@@ -48,6 +50,17 @@ public class ConnectionManagerImpl implements ConnectionManager {
         IrcServerConfigModel dto = convertToDto(getConfig(network));
         if (dto != null) {
             return runtimeService.putOffline(dto);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean sendMessageToIRC(MessageToIRC messageToIRC) {
+        HokanCore core = runtimeService.findTargetCore(messageToIRC.getTarget());
+        if (core != null) {
+            return core.sendMessageToIRC(messageToIRC);
+        } else {
+            log.error("No core to send message: {}", messageToIRC.getTarget());
         }
         return false;
     }

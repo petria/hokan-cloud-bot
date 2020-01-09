@@ -12,6 +12,7 @@ public class RawIRCEvent {
 
     private final Map<String, String> parameters = new HashMap<>();
 
+    private long transactionId;
     private String source;
     private String type;
 
@@ -28,6 +29,11 @@ public class RawIRCEvent {
     public RawIRCEvent parameter(String value) {
         parameters.put(parameterCount + "", value);
         parameterCount++;
+        return this;
+    }
+
+    public RawIRCEvent transactionId(long id) {
+        this.transactionId = id;
         return this;
     }
 

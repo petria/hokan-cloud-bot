@@ -10,6 +10,8 @@ public interface HokanCoreRuntimeService {
 
     boolean putOffline(IrcServerConfigModel config);
 
+    HokanCore findTargetCore(String target);
+
     void publishRawIRCEvent(RawIRCEvent event);
 
     void coreDisconnected(HokanCore hokanCore);

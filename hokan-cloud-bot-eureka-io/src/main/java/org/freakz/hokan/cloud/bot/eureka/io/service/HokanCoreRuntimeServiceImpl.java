@@ -55,6 +55,16 @@ public class HokanCoreRuntimeServiceImpl implements HokanCoreRuntimeService {
         }
     }
 
+    @Override
+    public HokanCore findTargetCore(String target) {
+        for (HokanCore core : instanceMap.values()) {
+            if (core.getUniqueIdent().equals(target)) {
+                return core;
+            }
+        }
+        return null;
+    }
+
     private void disconnectInstance(HokanCore instance) {
         try {
             instance.disconnect();
