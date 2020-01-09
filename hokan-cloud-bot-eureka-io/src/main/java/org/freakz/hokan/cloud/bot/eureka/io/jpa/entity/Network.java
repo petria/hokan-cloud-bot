@@ -124,6 +124,14 @@ public class Network implements Serializable {
         this.channelsJoined += delta;
     }
 
+    public String getNetworkName() {
+        return networkName;
+    }
+
+    public void setNetworkName(String networkName) {
+        this.networkName = networkName;
+    }
+
     public String toString() {
         return String.format("[%02d] - %s", this.id, this.networkName);
     }

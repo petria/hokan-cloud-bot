@@ -4,10 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRC;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
 import org.freakz.hokan.cloud.bot.eureka.io.ircengine.HokanCore;
+import org.freakz.hokan.cloud.bot.eureka.io.jpa.entity.Channel;
+import org.freakz.hokan.cloud.bot.eureka.io.jpa.entity.ChannelStartupState;
 import org.freakz.hokan.cloud.bot.eureka.io.jpa.entity.IrcServerConfig;
+import org.freakz.hokan.cloud.bot.eureka.io.jpa.entity.IrcServerConfigState;
+import org.freakz.hokan.cloud.bot.eureka.io.jpa.repository.ChannelRepository;
 import org.freakz.hokan.cloud.bot.eureka.io.jpa.repository.IrcServerConfigRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,16 +20,17 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class ConnectionManagerImpl implements ConnectionManager {
+public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunner {
 
     private final IrcServerConfigRepository configRepository;
+    private final ChannelRepository channelRepository;
     private final HokanCoreRuntimeService runtimeService;
-
     private final ModelMapper modelMapper;
 
     @Autowired
-    public ConnectionManagerImpl(IrcServerConfigRepository configRepository, HokanCoreRuntimeService runtimeService, ModelMapper modelMapper) {
+    public ConnectionManagerImpl(IrcServerConfigRepository configRepository, ChannelRepository channelRepository, HokanCoreRuntimeService runtimeService, ModelMapper modelMapper) {
         this.configRepository = configRepository;
+        this.channelRepository = channelRepository;
         this.runtimeService = runtimeService;
         this.modelMapper = modelMapper;
     }
@@ -84,4 +90,24 @@ public class ConnectionManagerImpl implements ConnectionManager {
         return dto;
     }
 
+    @Override
+    public void run(String... args) throws Exception {
+        log.debug("STARTUP: init");
+        List<IrcServerConfig> configs = configRepository.findAll();
+        for (IrcServerConfig config : configs) {
+            if (config.getIrcServerConfigState() == IrcServerConfigState.CONNECTED) {
+                log.debug("STARTUP: Connecting config: {}", config.toString());
+                putOnline(config.getNetwork().getName());
+
+                List<Channel> networkChannels = channelRepository.findByNetwork(config.getNetwork());
+
+                for (Channel channel : networkChannels) {
+                    if (channel.getChannelStartupState() == ChannelStartupState.JOIN) {
+                        log.debug("STARTUP: joining channel {}", channel.toString());
+                        runtimeService.networkJoinChannel(config.getNetwork().getName(), channel.getChannelName());
+                    }
+                }
+            }
+        }
+    }
 }

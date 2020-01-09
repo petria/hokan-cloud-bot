@@ -10,11 +10,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
 @Component
 @Profile("dev")
 @Slf4j
+@Transactional
 public class DevProfileConfig implements CommandLineRunner {
 
     @Autowired
@@ -36,18 +38,19 @@ public class DevProfileConfig implements CommandLineRunner {
         IrcServerConfig config = new IrcServerConfig();
 
         Network network = new Network("DevNET");
-//        network = networkRepository.save(network);
+        network = networkRepository.save(network);
 
         config.setNetwork(network);
-        config.setServer("hpelite.lan");
+        config.setServer("localhost");
         config.setPort(1100);
         config.setIrcServerConfigState(IrcServerConfigState.CONNECTED);
 
+        configRepository.save(config);
+
         Channel channel = new Channel(network, "#HokanCLOUD");
         channel.setChannelStartupState(ChannelStartupState.JOIN);
-//        channelRepository.save(channel);
+        channelRepository.save(channel);
 
-        config = configRepository.save(config);
 
         int foo = 0;
     }

@@ -16,4 +16,5 @@ public interface HokanCoreRuntimeService {
 
     void coreDisconnected(HokanCore hokanCore);
 
+    boolean networkJoinChannel(String network, String channel);
 }

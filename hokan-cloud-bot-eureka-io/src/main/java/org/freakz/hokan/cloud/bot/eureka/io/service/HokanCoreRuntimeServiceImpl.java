@@ -32,7 +32,7 @@ public class HokanCoreRuntimeServiceImpl implements HokanCoreRuntimeService {
         core = new HokanCore(config, "HokanCld", this);
         try {
             core.connect(config.getServer(), config.getPort());
-            core.joinChannel("#HokanCloud");
+//            core.joinChannel("#HokanCloud");
             instanceMap.put(network, core);
             return true;
         } catch (Exception e) {
@@ -40,6 +40,16 @@ public class HokanCoreRuntimeServiceImpl implements HokanCoreRuntimeService {
             return false;
         }
 
+    }
+
+    @Override
+    public boolean networkJoinChannel(String network, String channel) {
+        HokanCore core = instanceMap.get(network);
+        if (core != null) {
+            core.joinChannel(channel);
+            return true;
+        }
+        return false;
     }
 
     @Override

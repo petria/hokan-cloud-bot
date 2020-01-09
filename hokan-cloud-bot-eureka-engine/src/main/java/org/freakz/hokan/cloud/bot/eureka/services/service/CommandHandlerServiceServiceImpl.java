@@ -7,6 +7,8 @@ import org.freakz.hokan.cloud.bot.eureka.services.client.IrcIOClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
+
 @Service
 @Slf4j
 public class CommandHandlerServiceServiceImpl implements CommandHandlerService {
@@ -20,9 +22,16 @@ public class CommandHandlerServiceServiceImpl implements CommandHandlerService {
 
     @Override
     public void handleMessage(RawIRCEvent event) {
+        Random rnd = new Random();
         String line = event.getParameters().get("4");
         if (line.equals("!ping")) {
-            sendReply("pong", event.getSource(), event.getParameters().get("0"), event.getTransactionId());
+            long delay = 1000 + (rnd.nextInt(5) * 1000);
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            sendReply(event.getTransactionId() + " :: pong: " + delay, event.getSource(), event.getParameters().get("0"), event.getTransactionId());
         }
     }
 
