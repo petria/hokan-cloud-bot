@@ -1,5 +1,7 @@
 package org.freakz.hokan.cloud.bot.eureka.io.resource;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.ribbon.proxy.annotation.Hystrix;
 import lombok.extern.slf4j.Slf4j;
 import org.freakz.hokan.cloud.bot.common.api.io.IOResource;
 import org.freakz.hokan.cloud.bot.common.model.ServiceResponse;
@@ -26,11 +28,13 @@ public class IORestController implements IOResource {
     }
 
     @Override
+    @Hystrix
     public List<IrcServerConfigModel> getConfiguredIRCServers() {
         return connectionManager.getConfiguredIRCServers();
     }
 
     @Override
+    @HystrixCommand(fallbackMethod = "fallBackServiceRespond")
     public ServiceResponse putIRCServerOnline(String network) {
         log.debug("Go online: {}", network);
         boolean ok = connectionManager.putOnline(network);
@@ -41,7 +45,12 @@ public class IORestController implements IOResource {
         }
     }
 
+    public ServiceResponse fallBackServiceRespond(String param) {
+        return ServiceResponse.builder().status(INTERNAL_SERVER_ERROR.value()).response("FALLBACK: ERROR").build();
+    }
+
     @Override
+    @HystrixCommand
     public ServiceResponse putIRCServerOffline(String network) {
         log.debug("Go offline: {}", network);
         boolean ok = connectionManager.putOffline(network);
@@ -53,6 +62,7 @@ public class IORestController implements IOResource {
     }
 
     @Override
+    @HystrixCommand
     public void postMessageToIRC(MessageToIRC messageToIRC) {
         boolean ok = connectionManager.sendMessageToIRC(messageToIRC);
 //        log.debug("post: {}", ok);

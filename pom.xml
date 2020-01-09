@@ -20,6 +20,7 @@
     </properties>
 
     <modules>
+        <module>hokan-cloud-bot-custom</module>
         <module>hokan-cloud-bot-common</module>
         <module>hokan-cloud-bot-common-jpa</module>
         <module>hokan-cloud-bot-eureka-server</module>
