@@ -57,12 +57,6 @@
             <version>2.3.5</version>
         </dependency>
 
-        <!--        <dependency>
-                    <groupId>org.freakz</groupId>
-                    <artifactId>hokan-cloud-bot-common-jpa</artifactId>
-                    <version>1.0.0-SNAPSHOT</version>
-                </dependency>
-        -->
         <dependency>
             <groupId>org.freakz</groupId>
             <artifactId>hokan-cloud-bot-custom</artifactId>
