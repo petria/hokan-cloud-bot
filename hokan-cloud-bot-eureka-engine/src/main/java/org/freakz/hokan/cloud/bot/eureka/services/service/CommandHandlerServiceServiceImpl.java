@@ -13,6 +13,7 @@ import java.util.Random;
 @Slf4j
 public class CommandHandlerServiceServiceImpl implements CommandHandlerService {
 
+
     private final IrcIOClient ircIOClient;
 
     @Autowired
@@ -22,6 +23,8 @@ public class CommandHandlerServiceServiceImpl implements CommandHandlerService {
 
     @Override
     public void handleMessage(RawIRCEvent event) {
+
+
         Random rnd = new Random();
         String line = event.getParameters().get("4");
         if (line.equals("!ping")) {

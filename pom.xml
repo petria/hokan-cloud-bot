@@ -23,10 +23,11 @@
         <module>hokan-cloud-bot-custom</module>
         <module>hokan-cloud-bot-common</module>
         <module>hokan-cloud-bot-common-jpa</module>
-        <module>hokan-cloud-bot-eureka-server</module>
         <module>hokan-cloud-bot-eureka-io</module>
         <module>hokan-cloud-bot-eureka-engine</module>
         <module>hokan-cloud-bot-eureka-services</module>
+
+        <module>hokan-cloud-bot-eureka-server</module>
     </modules>
 
     <dependencies>
