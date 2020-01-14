@@ -7,7 +7,7 @@ import org.freakz.hokan.cloud.bot.common.jpa.entity.IrcServerConfig;
 import org.freakz.hokan.cloud.bot.common.jpa.entity.IrcServerConfigState;
 import org.freakz.hokan.cloud.bot.common.jpa.repository.ChannelRepository;
 import org.freakz.hokan.cloud.bot.common.jpa.repository.IrcServerConfigRepository;
-import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRC;
+import org.freakz.hokan.cloud.bot.common.model.event.ToIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
 import org.freakz.hokan.cloud.bot.eureka.io.ircengine.HokanCore;
 import org.modelmapper.ModelMapper;
@@ -61,12 +61,12 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
     }
 
     @Override
-    public boolean sendMessageToIRC(MessageToIRC messageToIRC) {
-        HokanCore core = runtimeService.findTargetCore(messageToIRC.getTarget());
+    public boolean sendMessageToIRC(ToIRCEvent toIRCEvent) {
+        HokanCore core = runtimeService.findTargetCore(toIRCEvent.getTarget());
         if (core != null) {
-            return core.sendMessageToIRC(messageToIRC);
+            return core.sendMessageToIRC(toIRCEvent);
         } else {
-            log.error("No core to send message: {}", messageToIRC.getTarget());
+            log.error("No core to send message: {}", toIRCEvent.getTarget());
         }
         return false;
     }

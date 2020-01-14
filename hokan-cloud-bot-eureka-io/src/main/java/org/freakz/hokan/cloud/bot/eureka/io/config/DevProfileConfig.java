@@ -51,6 +51,21 @@ public class DevProfileConfig implements CommandLineRunner {
         channel.setChannelStartupState(ChannelStartupState.JOIN);
         channelRepository.save(channel);
 
+        IrcServerConfig config2 = new IrcServerConfig();
+
+        Network network2 = new Network("IrcNET");
+        network2 = networkRepository.save(network2);
+
+        config2.setNetwork(network2);
+        config2.setServer("irc.stealth.net");
+        config2.setPort(6667);
+        config2.setIrcServerConfigState(IrcServerConfigState.CONNECTED);
+
+        configRepository.save(config2);
+
+        Channel channel2 = new Channel(network, "#HokanCLOUD");
+        channel2.setChannelStartupState(ChannelStartupState.JOIN);
+        channelRepository.save(channel2);
 
         int foo = 0;
     }

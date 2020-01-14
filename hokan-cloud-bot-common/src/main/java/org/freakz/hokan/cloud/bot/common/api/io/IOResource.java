@@ -1,7 +1,7 @@
 package org.freakz.hokan.cloud.bot.common.api.io;
 
 import org.freakz.hokan.cloud.bot.common.model.ServiceResponse;
-import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRC;
+import org.freakz.hokan.cloud.bot.common.model.event.ToIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +28,7 @@ public interface IOResource {
 
     @RequestMapping(method = POST, value = "/post-message")
     @ResponseBody
-    void postMessageToIRC(@RequestBody MessageToIRC messageToIRC);
+    void postMessageToIRC(@RequestBody ToIRCEvent toIRCEvent);
 
 
 }

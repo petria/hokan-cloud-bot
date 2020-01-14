@@ -1,6 +1,6 @@
 package org.freakz.hokan.cloud.bot.eureka.io.service;
 
-import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRC;
+import org.freakz.hokan.cloud.bot.common.model.event.ToIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
 
 import java.util.List;
@@ -13,5 +13,5 @@ public interface ConnectionManager {
 
     boolean putOffline(String network);
 
-    boolean sendMessageToIRC(MessageToIRC messageToIRC);
+    boolean sendMessageToIRC(ToIRCEvent toIRCEvent);
 }

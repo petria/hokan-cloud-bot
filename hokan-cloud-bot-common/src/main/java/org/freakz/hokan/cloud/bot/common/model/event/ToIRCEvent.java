@@ -5,9 +5,9 @@ import lombok.Data;
 //@Builder
 @Data
 //@RequiredArgsConstructor
-public class MessageToIRC {
+public class ToIRCEvent {
 
-    public MessageToIRC() {
+    public ToIRCEvent() {
     }
 
     private long transactionId;

@@ -5,7 +5,7 @@ import com.netflix.ribbon.proxy.annotation.Hystrix;
 import lombok.extern.slf4j.Slf4j;
 import org.freakz.hokan.cloud.bot.common.api.io.IOResource;
 import org.freakz.hokan.cloud.bot.common.model.ServiceResponse;
-import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRC;
+import org.freakz.hokan.cloud.bot.common.model.event.ToIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
 import org.freakz.hokan.cloud.bot.eureka.io.service.ConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +63,8 @@ public class IORestController implements IOResource {
 
     @Override
     @HystrixCommand
-    public void postMessageToIRC(MessageToIRC messageToIRC) {
-        boolean ok = connectionManager.sendMessageToIRC(messageToIRC);
+    public void postMessageToIRC(ToIRCEvent toIRCEvent) {
+        boolean ok = connectionManager.sendMessageToIRC(toIRCEvent);
 //        log.debug("post: {}", ok);
     }
 
