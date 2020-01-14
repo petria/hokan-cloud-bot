@@ -3,22 +3,23 @@ package org.freakz.hokan.cloud.bot.eureka.io.service;
 import lombok.extern.slf4j.Slf4j;
 import org.freakz.hokan.cloud.bot.common.model.event.RawIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
-import org.freakz.hokan.cloud.bot.eureka.io.client.IrcEngineClient;
 import org.freakz.hokan.cloud.bot.eureka.io.ircengine.HokanCore;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Service
+//@Service
 @Slf4j
 public class HokanCoreRuntimeServiceImpl implements HokanCoreRuntimeService {
 
-    @Autowired
-    private IrcEngineClient ircEngineClient;
+    private final ConnectionManager connectionManager;
 
     private final Map<String, HokanCore> instanceMap = new ConcurrentHashMap<>();
+
+    //    @Autowired
+    public HokanCoreRuntimeServiceImpl(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
 
     @Override
     public boolean putOnline(IrcServerConfigModel config) {
@@ -31,12 +32,12 @@ public class HokanCoreRuntimeServiceImpl implements HokanCoreRuntimeService {
 
         core = new HokanCore(config, "HokanCld", this);
         try {
-            core.connect(config.getServer(), config.getPort());
-//            core.joinChannel("#HokanCloud");
             instanceMap.put(network, core);
+            core.connect(config.getServer(), config.getPort());
             return true;
         } catch (Exception e) {
             log.error("Connect error", e);
+            instanceMap.remove(network);
             return false;
         }
 
@@ -85,17 +86,18 @@ public class HokanCoreRuntimeServiceImpl implements HokanCoreRuntimeService {
     }
 
     @Override
+    public void publishRawIRCEvent(RawIRCEvent event) {
+        connectionManager.publishRawIRCEvent(event);
+    }
+
+    // EVENT HANDLERS
+    @Override
     public void coreDisconnected(HokanCore hokanCore) {
         disconnectInstance(hokanCore);
     }
 
     @Override
-    public void publishRawIRCEvent(RawIRCEvent event) {
-        log.debug("Publish event from: {} - TYPE: {}", event.getSource(), event.getType());
-        try {
-            ircEngineClient.rawIRCEvent(event);
-        } catch (Exception e) {
-            log.error("publish failed!", e);
-        }
+    public void coreConnected(HokanCore hokanCore) {
+        connectionManager.coreConnected(hokanCore);
     }
 }

@@ -57,13 +57,13 @@ public class DevProfileConfig implements CommandLineRunner {
         network2 = networkRepository.save(network2);
 
         config2.setNetwork(network2);
-        config2.setServer("irc.stealth.net");
+        config2.setServer("irc.atw-inter.net");
         config2.setPort(6667);
         config2.setIrcServerConfigState(IrcServerConfigState.CONNECTED);
 
         configRepository.save(config2);
 
-        Channel channel2 = new Channel(network, "#HokanCLOUD");
+        Channel channel2 = new Channel(network2, "#HokanCLOUD");
         channel2.setChannelStartupState(ChannelStartupState.JOIN);
         channelRepository.save(channel2);
 

@@ -1,8 +1,8 @@
 package org.freakz.hokan.cloud.bot.eureka.io.ircengine;
 
 import lombok.extern.slf4j.Slf4j;
-import org.freakz.hokan.cloud.bot.common.model.event.ToIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.event.RawIRCEvent;
+import org.freakz.hokan.cloud.bot.common.model.event.ToIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
 import org.freakz.hokan.cloud.bot.eureka.io.service.HokanCoreRuntimeService;
 import org.jibble.pircbot.PircBot;
@@ -41,6 +41,7 @@ public class HokanCore extends PircBot {
     @Override
     protected void onConnect() {
         log.debug("Connected!");
+        hokanCoreRuntimeService.coreConnected(this);
     }
 
     private static long getAndStoreTransactionId() {
@@ -78,10 +79,6 @@ public class HokanCore extends PircBot {
         super.onPrivateMessage(sender, login, hostname, message, original);
     }
 
-    public String getUniqueIdent() {
-        return ircServerConfig.getUniqueIdent();
-    }
-
     public boolean sendMessageToIRC(ToIRCEvent toIRCEvent) {
         String channel = toIRCEvent.getChannel();
         sendMessage(channel, toIRCEvent.getMessage());
@@ -92,5 +89,20 @@ public class HokanCore extends PircBot {
             log.debug(":: {}", diffStr);
         }
         return true;
+    }
+
+
+    @Override
+    public String toString() {
+        return String.format("[%s] %s:%d", ircServerConfig.getNetwork(), ircServerConfig.getServer(), ircServerConfig.getPort());
+    }
+
+
+    public String getUniqueIdent() {
+        return ircServerConfig.getUniqueIdent();
+    }
+
+    public String getNetwork() {
+        return ircServerConfig.getNetwork();
     }
 }

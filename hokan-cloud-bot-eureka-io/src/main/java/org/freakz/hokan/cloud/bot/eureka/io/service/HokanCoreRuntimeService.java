@@ -14,7 +14,11 @@ public interface HokanCoreRuntimeService {
 
     void publishRawIRCEvent(RawIRCEvent event);
 
+    boolean networkJoinChannel(String network, String channel);
+
+    // Events Core -> Service
+    void coreConnected(HokanCore hokanCore);
+
     void coreDisconnected(HokanCore hokanCore);
 
-    boolean networkJoinChannel(String network, String channel);
 }

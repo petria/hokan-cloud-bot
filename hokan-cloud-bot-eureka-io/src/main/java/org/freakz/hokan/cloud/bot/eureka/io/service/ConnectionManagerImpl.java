@@ -1,14 +1,13 @@
 package org.freakz.hokan.cloud.bot.eureka.io.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.freakz.hokan.cloud.bot.common.jpa.entity.Channel;
-import org.freakz.hokan.cloud.bot.common.jpa.entity.ChannelStartupState;
-import org.freakz.hokan.cloud.bot.common.jpa.entity.IrcServerConfig;
-import org.freakz.hokan.cloud.bot.common.jpa.entity.IrcServerConfigState;
+import org.freakz.hokan.cloud.bot.common.jpa.entity.*;
 import org.freakz.hokan.cloud.bot.common.jpa.repository.ChannelRepository;
 import org.freakz.hokan.cloud.bot.common.jpa.repository.IrcServerConfigRepository;
+import org.freakz.hokan.cloud.bot.common.model.event.RawIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.event.ToIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
+import org.freakz.hokan.cloud.bot.eureka.io.client.IrcEngineClient;
 import org.freakz.hokan.cloud.bot.eureka.io.ircengine.HokanCore;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +26,16 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
     private final HokanCoreRuntimeService runtimeService;
     private final ModelMapper modelMapper;
 
+    private final IrcEngineClient ircEngineClient;
+
     @Autowired
-    public ConnectionManagerImpl(IrcServerConfigRepository configRepository, ChannelRepository channelRepository, HokanCoreRuntimeService runtimeService, ModelMapper modelMapper) {
+    public ConnectionManagerImpl(IrcServerConfigRepository configRepository, ChannelRepository channelRepository, ModelMapper modelMapper, IrcEngineClient ircEngineClient) {
         this.configRepository = configRepository;
         this.channelRepository = channelRepository;
-        this.runtimeService = runtimeService;
         this.modelMapper = modelMapper;
+        this.ircEngineClient = ircEngineClient;
+
+        this.runtimeService = new HokanCoreRuntimeServiceImpl(this);
     }
 
 
@@ -98,16 +101,38 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
             if (config.getIrcServerConfigState() == IrcServerConfigState.CONNECTED) {
                 log.debug("STARTUP: Connecting config: {}", config.toString());
                 putOnline(config.getNetwork().getName());
-
-                List<Channel> networkChannels = channelRepository.findByNetwork(config.getNetwork());
-
-                for (Channel channel : networkChannels) {
-                    if (channel.getChannelStartupState() == ChannelStartupState.JOIN) {
-                        log.debug("STARTUP: joining channel {}", channel.toString());
-                        runtimeService.networkJoinChannel(config.getNetwork().getName(), channel.getChannelName());
-                    }
-                }
+//                joinNetworkChannels(config.getNetwork());
             }
+        }
+    }
+
+    private void joinNetworkChannels(Network network) {
+        List<Channel> networkChannels = channelRepository.findByNetwork(network);
+        for (Channel channel : networkChannels) {
+            if (channel.getChannelStartupState() == ChannelStartupState.JOIN) {
+                log.debug("joining channel {}", channel.toString());
+                runtimeService.networkJoinChannel(network.getName(), channel.getChannelName());
+            }
+        }
+    }
+
+    @Override
+    public void coreConnected(HokanCore hokanCore) {
+        IrcServerConfig config = getConfig(hokanCore.getNetwork());
+        if (config != null) {
+            joinNetworkChannels(config.getNetwork());
+        } else {
+            log.error("{}: no config found, cant't join channels", hokanCore.toString());
+        }
+    }
+
+    @Override
+    public void publishRawIRCEvent(RawIRCEvent event) {
+        log.debug("Publish event from: {} - TYPE: {}", event.getSource(), event.getType());
+        try {
+            ircEngineClient.rawIRCEvent(event);
+        } catch (Exception e) {
+            log.error("publish failed!", e);
         }
     }
 }
