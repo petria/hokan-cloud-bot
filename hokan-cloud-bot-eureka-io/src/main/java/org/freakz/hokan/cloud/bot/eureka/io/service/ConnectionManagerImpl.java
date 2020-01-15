@@ -1,5 +1,6 @@
 package org.freakz.hokan.cloud.bot.eureka.io.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.freakz.hokan.cloud.bot.common.jpa.entity.*;
 import org.freakz.hokan.cloud.bot.common.jpa.repository.ChannelRepository;
@@ -40,12 +41,14 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
 
 
     @Override
+    @HystrixCommand()
     public List<IrcServerConfigModel> getConfiguredIRCServers() {
         List<IrcServerConfig> configs = configRepository.findAll();
         return configs.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
     @Override
+    @HystrixCommand()
     public boolean putOnline(String network) {
         IrcServerConfigModel dto = convertToDto(getConfig(network));
         if (dto != null) {
@@ -55,6 +58,7 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
     }
 
     @Override
+    @HystrixCommand()
     public boolean putOffline(String network) {
         IrcServerConfigModel dto = convertToDto(getConfig(network));
         if (dto != null) {
@@ -64,6 +68,7 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
     }
 
     @Override
+    @HystrixCommand()
     public boolean sendMessageToIRC(ToIRCEvent toIRCEvent) {
         HokanCore core = runtimeService.findTargetCore(toIRCEvent.getTarget());
         if (core != null) {
@@ -117,6 +122,7 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
     }
 
     @Override
+    @HystrixCommand()
     public void coreConnected(HokanCore hokanCore) {
         IrcServerConfig config = getConfig(hokanCore.getNetwork());
         if (config != null) {
@@ -127,6 +133,7 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
     }
 
     @Override
+    @HystrixCommand()
     public void publishRawIRCEvent(RawIRCEvent event) {
         log.debug("Publish event from: {} - TYPE: {}", event.getSource(), event.getType());
         try {

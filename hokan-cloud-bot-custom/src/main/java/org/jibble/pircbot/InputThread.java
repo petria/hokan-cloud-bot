@@ -94,7 +94,7 @@ public class InputThread extends Thread {
 						charset = StandardCharsets.ISO_8859_1;
 					}
 				}
-				_bot.log("Line charset: " + charset.displayName());
+//				_bot.log("Line charset: " + charset.displayName());
 				detector.reset();
 
 				String line = new String(messageBytes, charset);
