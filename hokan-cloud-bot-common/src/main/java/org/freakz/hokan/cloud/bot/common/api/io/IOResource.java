@@ -16,7 +16,6 @@ public interface IOResource {
     @ResponseBody
     List<IrcServerConfigModel> getConfiguredIRCServers();
 
-
     @RequestMapping(method = PUT, value = "/servers/{network}")
     @ResponseBody
     ServiceResponse putIRCServerOnline(@PathVariable("network") String network);
