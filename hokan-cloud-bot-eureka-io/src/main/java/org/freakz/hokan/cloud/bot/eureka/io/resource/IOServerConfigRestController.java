@@ -3,10 +3,9 @@ package org.freakz.hokan.cloud.bot.eureka.io.resource;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.ribbon.proxy.annotation.Hystrix;
 import lombok.extern.slf4j.Slf4j;
-import org.freakz.hokan.cloud.bot.common.api.io.IOResource;
-import org.freakz.hokan.cloud.bot.common.model.ServiceResponse;
-import org.freakz.hokan.cloud.bot.common.model.event.ToIRCEvent;
+import org.freakz.hokan.cloud.bot.common.api.io.IOServerConfigResource;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
+import org.freakz.hokan.cloud.bot.common.model.response.ServiceResponse;
 import org.freakz.hokan.cloud.bot.eureka.io.service.ConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,12 +17,12 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @Slf4j
-public class IORestController implements IOResource {
+public class IOServerConfigRestController implements IOServerConfigResource {
 
     private final ConnectionManager connectionManager;
 
     @Autowired
-    public IORestController(ConnectionManager connectionManager) {
+    public IOServerConfigRestController(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
     }
 
@@ -59,13 +58,6 @@ public class IORestController implements IOResource {
         } else {
             return ServiceResponse.builder().status(INTERNAL_SERVER_ERROR.value()).response("ERROR").build();
         }
-    }
-
-    @Override
-    @HystrixCommand
-    public void postMessageToIRC(ToIRCEvent toIRCEvent) {
-        boolean ok = connectionManager.sendMessageToIRC(toIRCEvent);
-//        log.debug("post: {}", ok);
     }
 
 

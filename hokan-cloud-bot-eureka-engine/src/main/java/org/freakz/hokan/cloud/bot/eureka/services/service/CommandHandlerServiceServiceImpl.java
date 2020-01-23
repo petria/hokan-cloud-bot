@@ -1,7 +1,7 @@
 package org.freakz.hokan.cloud.bot.eureka.services.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.freakz.hokan.cloud.bot.common.model.event.ToIRCEvent;
+import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.event.RawIRCEvent;
 import org.freakz.hokan.cloud.bot.eureka.services.client.IrcIOClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class CommandHandlerServiceServiceImpl implements CommandHandlerService {
     }
 
     private void sendReply(String reply, String target, String channel, long transactionId) {
-        ToIRCEvent message = new ToIRCEvent();
+        MessageToIRCEvent message = new MessageToIRCEvent();
         message.setTransactionId(transactionId);
         message.setMessage(reply);
         message.setTarget(target);

@@ -1,16 +1,18 @@
 package org.freakz.hokan.cloud.bot.common.api.io;
 
-import org.freakz.hokan.cloud.bot.common.model.ServiceResponse;
-import org.freakz.hokan.cloud.bot.common.model.event.ToIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
-import org.springframework.web.bind.annotation.*;
+import org.freakz.hokan.cloud.bot.common.model.response.ServiceResponse;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-public interface IOResource {
+public interface IOServerConfigResource {
 
     @RequestMapping(method = GET, value = "/servers")
     @ResponseBody
@@ -24,10 +26,6 @@ public interface IOResource {
     @RequestMapping(method = DELETE, value = "/servers/{network}")
     @ResponseBody
     ServiceResponse putIRCServerOffline(@PathVariable("network") String network);
-
-    @RequestMapping(method = POST, value = "/post-message")
-    @ResponseBody
-    void postMessageToIRC(@RequestBody ToIRCEvent toIRCEvent);
 
 
 }

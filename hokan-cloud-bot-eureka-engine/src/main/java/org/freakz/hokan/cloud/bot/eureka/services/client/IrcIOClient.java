@@ -1,6 +1,6 @@
 package org.freakz.hokan.cloud.bot.eureka.services.client;
 
-import org.freakz.hokan.cloud.bot.common.model.event.ToIRCEvent;
+import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRCEvent;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +13,6 @@ public interface IrcIOClient {
 
     @RequestMapping(method = POST, value = "/post-message")
     @ResponseBody
-    void postMessageToIRC(@RequestBody ToIRCEvent toIRCEvent);
+    void postMessageToIRC(@RequestBody MessageToIRCEvent messageToIRCEvent);
 
 }

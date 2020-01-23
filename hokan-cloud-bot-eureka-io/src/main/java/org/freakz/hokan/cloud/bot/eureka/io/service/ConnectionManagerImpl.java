@@ -5,8 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.freakz.hokan.cloud.bot.common.jpa.entity.*;
 import org.freakz.hokan.cloud.bot.common.jpa.repository.ChannelRepository;
 import org.freakz.hokan.cloud.bot.common.jpa.repository.IrcServerConfigRepository;
+import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.event.RawIRCEvent;
-import org.freakz.hokan.cloud.bot.common.model.event.ToIRCEvent;
+import org.freakz.hokan.cloud.bot.common.model.io.ChannelModel;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
 import org.freakz.hokan.cloud.bot.eureka.io.client.IrcEngineClient;
 import org.freakz.hokan.cloud.bot.eureka.io.ircengine.HokanCore;
@@ -69,12 +70,12 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
 
     @Override
     @HystrixCommand()
-    public boolean sendMessageToIRC(ToIRCEvent toIRCEvent) {
-        HokanCore core = runtimeService.findTargetCore(toIRCEvent.getTarget());
+    public boolean sendMessageToIRC(MessageToIRCEvent messageToIRCEvent) {
+        HokanCore core = runtimeService.findTargetCore(messageToIRCEvent.getTarget());
         if (core != null) {
-            return core.sendMessageToIRC(toIRCEvent);
+            return core.sendMessageToIRC(messageToIRCEvent);
         } else {
-            log.error("No core to send message: {}", toIRCEvent.getTarget());
+            log.error("No core to send message: {}", messageToIRCEvent.getTarget());
         }
         return false;
     }
@@ -141,5 +142,14 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
         } catch (Exception e) {
             log.error("publish failed!", e);
         }
+    }
+
+    @Override
+    public List<ChannelModel> getJoinedChannels(String network) {
+        HokanCore core = runtimeService.findTargetCoreByNetwork(network);
+        if (core != null) {
+            return core.getJoinedChannels();
+        }
+        return null;
     }
 }

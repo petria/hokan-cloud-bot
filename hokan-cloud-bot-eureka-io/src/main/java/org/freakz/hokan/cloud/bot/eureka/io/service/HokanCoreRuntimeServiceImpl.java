@@ -67,6 +67,16 @@ public class HokanCoreRuntimeServiceImpl implements HokanCoreRuntimeService {
     }
 
     @Override
+    public HokanCore findTargetCoreByNetwork(String network) {
+        for (HokanCore core : instanceMap.values()) {
+            if (core.getNetwork().equalsIgnoreCase(network)) {
+                return core;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public HokanCore findTargetCore(String target) {
         for (HokanCore core : instanceMap.values()) {
             if (core.getUniqueIdent().equals(target)) {
