@@ -61,7 +61,6 @@ public class HokanCore extends PircBot {
 
     @Override
     protected void onJoin(String channelName, String sender, String login, String hostname) {
-        //super.onJoin(channel, sender, login, hostname);
         sendTopicQuery(channelName);
     }
 
@@ -127,10 +126,8 @@ public class HokanCore extends PircBot {
         return true;
     }
 
-
-    @Override
-    public String toString() {
-        return String.format("[%s] %s:%d", ircServerConfig.getNetwork(), ircServerConfig.getServer(), ircServerConfig.getPort());
+    public void sendRawLineToIRC(String line) {
+        sendRawLineViaQueue(line);
     }
 
 
@@ -154,4 +151,11 @@ public class HokanCore extends PircBot {
     private void sendTopicQuery(String channelName) {
         sendRawLineViaQueue("TOPIC " + channelName);
     }
+
+
+    @Override
+    public String toString() {
+        return String.format("[%s] %s:%d", ircServerConfig.getNetwork(), ircServerConfig.getServer(), ircServerConfig.getPort());
+    }
+
 }
