@@ -96,14 +96,10 @@ public class HokanCore extends PircBot {
 
     @Override
     protected void onServerResponse(int code, String response) {
-        if (code == 331) {
-            log.debug("TOPIC response: {}", response);
+        if (code == RPL_NOTOPIC) {
+            log.debug("RPL_NOTOPIC response: {}", response);
             String split[] = response.split(" ");
-            if (response.endsWith("No topic is set")) {
-                removeChannelTopic(split[1]);
-            } else {
-                int foo = 0;
-            }
+            removeChannelTopic(split[1]);
         }
     }
 
