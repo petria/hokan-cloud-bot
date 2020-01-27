@@ -51,6 +51,7 @@ public class DevProfileConfig implements CommandLineRunner {
         channel.setChannelStartupState(ChannelStartupState.JOIN);
         channelRepository.save(channel);
 
+        /*
         IrcServerConfig config2 = new IrcServerConfig();
 
         Network network2 = new Network("IrcNET");
@@ -66,8 +67,8 @@ public class DevProfileConfig implements CommandLineRunner {
         Channel channel2 = new Channel(network2, "#HokanCLOUD");
         channel2.setChannelStartupState(ChannelStartupState.JOIN);
         channelRepository.save(channel2);
+*/
 
-        int foo = 0;
     }
 
 

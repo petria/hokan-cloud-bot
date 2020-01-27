@@ -18,6 +18,7 @@ public class HokanCore extends PircBot {
 
     private static long transactionId = 0;
     private static final Map<Long, Long> transactionTimesMap = new ConcurrentHashMap<>();
+    private final Map<String, String> channelTopics = new ConcurrentHashMap<>();
 
     private final IrcServerConfigModel ircServerConfig;
     private final HokanCoreRuntimeService hokanCoreRuntimeService;
@@ -59,6 +60,18 @@ public class HokanCore extends PircBot {
     }
 
     @Override
+    protected void onJoin(String channelName, String sender, String login, String hostname) {
+        //super.onJoin(channel, sender, login, hostname);
+        sendTopicQuery(channelName);
+    }
+
+    @Override
+    protected void onTopic(String channel, String topic, String setBy, long date, boolean changed) {
+        log.debug("changed: {} - channel {} - topic {}", changed, channel, topic);
+        setChannelTopic(channel, topic);
+    }
+
+    @Override
     protected void onMessage(String channel, String sender, String login, String hostname, String message, byte[] original) {
 
         RawIRCEvent event = RawIRCEvent.builder()
@@ -79,6 +92,31 @@ public class HokanCore extends PircBot {
     @Override
     protected void onPrivateMessage(String sender, String login, String hostname, String message, byte[] original) {
         super.onPrivateMessage(sender, login, hostname, message, original);
+    }
+
+    @Override
+    protected void onServerResponse(int code, String response) {
+        if (code == 331) {
+            log.debug("TOPIC response: {}", response);
+            String split[] = response.split(" ");
+            if (response.endsWith("No topic is set")) {
+                removeChannelTopic(split[1]);
+            } else {
+                int foo = 0;
+            }
+        }
+    }
+
+    private void setChannelTopic(String channel, String topic) {
+        this.channelTopics.put(channel.toLowerCase(), topic);
+    }
+
+    private void removeChannelTopic(String channel) {
+        this.channelTopics.remove(channel.toLowerCase());
+    }
+
+    private String getChannelTopic(String channel) {
+        return this.channelTopics.get(channel.toLowerCase());
     }
 
     public boolean sendMessageToIRC(MessageToIRCEvent messageToIRCEvent) {
@@ -111,9 +149,13 @@ public class HokanCore extends PircBot {
     public List<ChannelModel> getJoinedChannels() {
         List<ChannelModel> channelList = new ArrayList<>();
         for (String channel : getChannels()) {
-            ChannelModel model = ChannelModel.builder().name(channel).topic("?").build();
+            ChannelModel model = ChannelModel.builder().name(channel).topic(getChannelTopic(channel)).build();
             channelList.add(model);
         }
         return channelList;
+    }
+
+    private void sendTopicQuery(String channelName) {
+        sendRawLineViaQueue("TOPIC " + channelName);
     }
 }

@@ -31,8 +31,10 @@ public class IOIrcEngineResourceController implements IOIrcEngineResource {
 
         if (joinedChannels != null) {
             response.setPayload(JoinedChannelsServicePayload.builder().joinedChannels(joinedChannels).build());
+            response.setResponse("OK");
             response.setStatus(OK.value());
         } else {
+            response.setResponse("ERROR");
             response.setStatus(INTERNAL_SERVER_ERROR.value());
         }
         return response;
