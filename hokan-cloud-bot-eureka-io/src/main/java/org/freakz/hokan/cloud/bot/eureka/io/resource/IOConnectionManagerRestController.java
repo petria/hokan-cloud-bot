@@ -3,7 +3,7 @@ package org.freakz.hokan.cloud.bot.eureka.io.resource;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.ribbon.proxy.annotation.Hystrix;
 import lombok.extern.slf4j.Slf4j;
-import org.freakz.hokan.cloud.bot.common.api.io.IOServerConfigResource;
+import org.freakz.hokan.cloud.bot.common.api.io.IOConnectionManagerResource;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
 import org.freakz.hokan.cloud.bot.common.model.response.ServiceResponse;
 import org.freakz.hokan.cloud.bot.eureka.io.service.ConnectionManager;
@@ -17,12 +17,12 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @Slf4j
-public class IOServerConfigRestController implements IOServerConfigResource {
+public class IOConnectionManagerRestController implements IOConnectionManagerResource {
 
     private final ConnectionManager connectionManager;
 
     @Autowired
-    public IOServerConfigRestController(ConnectionManager connectionManager) {
+    public IOConnectionManagerRestController(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
     }
 
