@@ -13,7 +13,7 @@ public interface IOIrcEngineResource {
     @ResponseBody
     ServiceResponse getJoinedChannels(@PathVariable("network") String network);
 
-    @RequestMapping(method = GET, value = "/engine/{network}/{channel}/users")
+    @RequestMapping(method = GET, value = "/engine/{network}/{channel}")
     @ResponseBody
     ServiceResponse getChannelJoinedUsers(@PathVariable("network") String network);
 
@@ -21,16 +21,16 @@ public interface IOIrcEngineResource {
     @ResponseBody
     void postMessageToIRC(@RequestBody MessageToIRCEvent messageToIRCEvent);
 
-    @RequestMapping(method = PUT, value = "/engine/{network}/{channel}/who-is-channel")
+    @RequestMapping(method = PUT, value = "/engine/{network}/{channel}/who-is")
     @ResponseBody
     void putWhoIsChannel(@PathVariable("network") String network, @PathVariable("channel") String channel);
 
-    @RequestMapping(method = PUT, value = "/engine/{network}/{channel}")
+    @RequestMapping(method = PUT, value = "/engine/{network}/{channel}/join")
     @ResponseBody
-    void putJoinIsChannel(@PathVariable("network") String network, @PathVariable("channel") String channel);
+    void putJoinChannel(@PathVariable("network") String network, @PathVariable("channel") String channel);
 
     @RequestMapping(method = DELETE, value = "/engine/{network}/{channel}")
     @ResponseBody
-    void putPartIsChannel(@PathVariable("network") String network, @PathVariable("channel") String channel);
+    void deleteChannel(@PathVariable("network") String network, @PathVariable("channel") String channel);
 
 }

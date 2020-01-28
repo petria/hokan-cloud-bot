@@ -57,13 +57,12 @@ public class IOIrcEngineResourceController implements IOIrcEngineResource {
     }
 
     @Override
-    public void putJoinIsChannel(String network, String channel) {
+    public void putJoinChannel(String network, String channel) {
 
     }
 
     @Override
-    public void putPartIsChannel(String network, String channel) {
+    public void deleteChannel(String network, String channel) {
 
     }
-
 }
