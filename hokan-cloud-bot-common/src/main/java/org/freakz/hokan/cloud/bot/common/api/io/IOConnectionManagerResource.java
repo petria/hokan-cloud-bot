@@ -14,16 +14,16 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 public interface IOConnectionManagerResource {
 
-    @RequestMapping(method = GET, value = "/servers")
+    @RequestMapping(method = GET, value = "/cm//servers")
     @ResponseBody
     List<IrcServerConfigModel> getConfiguredIRCServers();
 
-    @RequestMapping(method = PUT, value = "/servers/{network}")
+    @RequestMapping(method = PUT, value = "/cm/servers/{network}")
     @ResponseBody
     ServiceResponse putIRCServerOnline(@PathVariable("network") String network);
 
 
-    @RequestMapping(method = DELETE, value = "/servers/{network}")
+    @RequestMapping(method = DELETE, value = "/cm/servers/{network}")
     @ResponseBody
     ServiceResponse putIRCServerOffline(@PathVariable("network") String network);
 
