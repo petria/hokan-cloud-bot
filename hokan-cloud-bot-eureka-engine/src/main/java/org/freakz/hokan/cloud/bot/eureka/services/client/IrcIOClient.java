@@ -11,7 +11,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @FeignClient("HOKAN-CLOUD-BOT-EUREKA-IO")
 public interface IrcIOClient {
 
-    @RequestMapping(method = POST, value = "/post-message")
+    @RequestMapping(method = POST, value = "/engine/post-message")
     @ResponseBody
     void postMessageToIRC(@RequestBody MessageToIRCEvent messageToIRCEvent);
 

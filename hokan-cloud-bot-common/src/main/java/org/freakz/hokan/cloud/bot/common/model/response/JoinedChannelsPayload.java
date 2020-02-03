@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class JoinedChannelsServicePayload extends Payload {
+public class JoinedChannelsPayload extends Payload {
 
     private List<ChannelModel> joinedChannels;
 

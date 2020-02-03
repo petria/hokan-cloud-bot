@@ -9,4 +9,11 @@ public class StringUtil {
         return key.toLowerCase();
     }
 
+    public String normalizeChannel(String channel) {
+        if (channel.startsWith("#")) {
+            return channel;
+        } else {
+            return "#" + channel;
+        }
+    }
 }

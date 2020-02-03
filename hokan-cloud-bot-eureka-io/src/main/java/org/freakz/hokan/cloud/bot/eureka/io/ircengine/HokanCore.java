@@ -4,9 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.event.RawIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.ChannelModel;
+import org.freakz.hokan.cloud.bot.common.model.io.ChannelUserModel;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
 import org.freakz.hokan.cloud.bot.eureka.io.service.HokanCoreRuntimeService;
 import org.jibble.pircbot.PircBot;
+import org.jibble.pircbot.PircBotUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,6 +148,22 @@ public class HokanCore extends PircBot {
             channelList.add(model);
         }
         return channelList;
+    }
+
+    public List<ChannelUserModel> getChannelUsers(String channel) {
+        List<ChannelUserModel> userModelList = new ArrayList<>();
+        for (PircBotUser pircBotUser : getUsers(channel)) {
+            ChannelUserModel user = ChannelUserModel.builder()
+                    .nick(pircBotUser.getNick())
+                    .prefix(pircBotUser.getPrefix())
+                    .hasVoice(pircBotUser.hasVoice())
+                    .isOp(pircBotUser.isOp())
+                    .build();
+
+            userModelList.add(user);
+        }
+
+        return userModelList;
     }
 
     private void sendTopicQuery(String channelName) {

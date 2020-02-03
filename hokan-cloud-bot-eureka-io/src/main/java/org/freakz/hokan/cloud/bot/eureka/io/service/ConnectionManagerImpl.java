@@ -8,6 +8,7 @@ import org.freakz.hokan.cloud.bot.common.jpa.repository.IrcServerConfigRepositor
 import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.event.RawIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.ChannelModel;
+import org.freakz.hokan.cloud.bot.common.model.io.ChannelUserModel;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
 import org.freakz.hokan.cloud.bot.eureka.io.client.IrcEngineClient;
 import org.freakz.hokan.cloud.bot.eureka.io.ircengine.HokanCore;
@@ -149,6 +150,15 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
         HokanCore core = runtimeService.findTargetCoreByNetwork(network);
         if (core != null) {
             return core.getJoinedChannels();
+        }
+        return null;
+    }
+
+    @Override
+    public List<ChannelUserModel> getChannelUsers(String network, String channel) {
+        HokanCore core = runtimeService.findTargetCoreByNetwork(network);
+        if (core != null) {
+            return core.getChannelUsers(channel);
         }
         return null;
     }

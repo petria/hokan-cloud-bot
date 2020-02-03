@@ -3,6 +3,7 @@ package org.freakz.hokan.cloud.bot.eureka.io.service;
 import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.event.RawIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.ChannelModel;
+import org.freakz.hokan.cloud.bot.common.model.io.ChannelUserModel;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
 import org.freakz.hokan.cloud.bot.eureka.io.ircengine.HokanCore;
 
@@ -25,4 +26,6 @@ public interface ConnectionManager {
 
     // IrcEngine commands
     List<ChannelModel> getJoinedChannels(String network);
+
+    List<ChannelUserModel> getChannelUsers(String network, String channel);
 }

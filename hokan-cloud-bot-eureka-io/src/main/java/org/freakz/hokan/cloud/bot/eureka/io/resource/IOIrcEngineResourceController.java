@@ -6,8 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.freakz.hokan.cloud.bot.common.api.io.IOIrcEngineResource;
 import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.ChannelModel;
-import org.freakz.hokan.cloud.bot.common.model.response.JoinedChannelsServicePayload;
+import org.freakz.hokan.cloud.bot.common.model.io.ChannelUserModel;
+import org.freakz.hokan.cloud.bot.common.model.response.ChannelUsersPayload;
+import org.freakz.hokan.cloud.bot.common.model.response.JoinedChannelsPayload;
 import org.freakz.hokan.cloud.bot.common.model.response.ServiceResponse;
+import org.freakz.hokan.cloud.bot.common.util.StringUtil;
 import org.freakz.hokan.cloud.bot.eureka.io.service.ConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,11 +29,11 @@ public class IOIrcEngineResourceController implements IOIrcEngineResource {
 
     @Override
     public ServiceResponse getJoinedChannels(String network) {
-        List<ChannelModel> joinedChannels = connectionManager.getJoinedChannels(network);
+        List<ChannelModel> payload = connectionManager.getJoinedChannels(network);
         ServiceResponse response = ServiceResponse.builder().build();
 
-        if (joinedChannels != null) {
-            response.setPayload(JoinedChannelsServicePayload.builder().joinedChannels(joinedChannels).build());
+        if (payload != null) {
+            response.setPayload(JoinedChannelsPayload.builder().joinedChannels(payload).build());
             response.setResponse("OK");
             response.setStatus(OK.value());
         } else {
@@ -41,8 +44,20 @@ public class IOIrcEngineResourceController implements IOIrcEngineResource {
     }
 
     @Override
-    public ServiceResponse getChannelJoinedUsers(String network) {
-        return null;
+    public ServiceResponse getChannelJoinedUsers(String network, String channel) {
+        List<ChannelUserModel> payload
+                = connectionManager.getChannelUsers(network, StringUtil.normalizeChannel(channel));
+        ServiceResponse response = ServiceResponse.builder().build();
+
+        if (payload != null) {
+            response.setPayload(ChannelUsersPayload.builder().joinedChannels(payload).build());
+            response.setResponse("OK");
+            response.setStatus(OK.value());
+        } else {
+            response.setResponse("ERROR");
+            response.setStatus(INTERNAL_SERVER_ERROR.value());
+        }
+        return response;
     }
 
     @Override

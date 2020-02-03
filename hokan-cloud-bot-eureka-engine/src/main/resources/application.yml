@@ -1,8 +1,8 @@
 spring:
   application:
     name: hokan-cloud-bot-eureka-engine
-
-server:
+  profiles:
+    active=dev:server:
   port: 8003
 
 eureka:

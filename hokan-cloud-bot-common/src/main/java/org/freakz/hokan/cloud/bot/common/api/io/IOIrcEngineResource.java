@@ -15,7 +15,7 @@ public interface IOIrcEngineResource {
 
     @RequestMapping(method = GET, value = "/engine/{network}/{channel}")
     @ResponseBody
-    ServiceResponse getChannelJoinedUsers(@PathVariable("network") String network);
+    ServiceResponse getChannelJoinedUsers(@PathVariable("network") String network, @PathVariable("channel") String channel);
 
     @RequestMapping(method = POST, value = "/engine/post-message")
     @ResponseBody
