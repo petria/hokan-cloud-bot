@@ -21,9 +21,9 @@ public interface IOIrcEngineResource {
     @ResponseBody
     void postMessageToIRC(@RequestBody MessageToIRCEvent messageToIRCEvent);
 
-    @RequestMapping(method = PUT, value = "/engine/{network}/{channel}/who-is")
+    @RequestMapping(method = PUT, value = "/engine/{network}/{channel}/who")
     @ResponseBody
-    void putWhoIsChannel(@PathVariable("network") String network, @PathVariable("channel") String channel);
+    void putWhoChannel(@PathVariable("network") String network, @PathVariable("channel") String channel);
 
     @RequestMapping(method = PUT, value = "/engine/{network}/{channel}/join")
     @ResponseBody

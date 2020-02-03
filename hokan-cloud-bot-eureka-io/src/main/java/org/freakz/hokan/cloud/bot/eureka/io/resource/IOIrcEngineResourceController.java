@@ -67,8 +67,8 @@ public class IOIrcEngineResourceController implements IOIrcEngineResource {
     }
 
     @Override
-    public void putWhoIsChannel(String network, String channel) {
-
+    public void putWhoChannel(String network, String channel) {
+        connectionManager.sendWhoChannel(network, StringUtil.normalizeChannel(channel));
     }
 
     @Override

@@ -28,4 +28,7 @@ public interface ConnectionManager {
     List<ChannelModel> getJoinedChannels(String network);
 
     List<ChannelUserModel> getChannelUsers(String network, String channel);
+
+    boolean sendWhoChannel(String network, String channel);
+
 }

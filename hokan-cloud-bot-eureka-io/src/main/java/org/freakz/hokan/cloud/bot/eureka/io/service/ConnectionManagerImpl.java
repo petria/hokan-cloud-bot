@@ -162,4 +162,13 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
         }
         return null;
     }
+
+    @Override
+    public boolean sendWhoChannel(String network, String channel) {
+        HokanCore core = runtimeService.findTargetCoreByNetwork(network);
+        if (core != null) {
+            return core.sendWhoChannel(channel);
+        }
+        return false;
+    }
 }

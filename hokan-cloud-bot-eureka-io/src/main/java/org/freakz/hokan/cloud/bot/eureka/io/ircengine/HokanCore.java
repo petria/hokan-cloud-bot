@@ -40,7 +40,7 @@ public class HokanCore extends PircBot {
     @Override
     public void log(String message) {
         if (!message.contains("PING") && !message.contains("PONG")) {
-            log.info(message);
+//            log.info(message);
         }
     }
 
@@ -64,6 +64,7 @@ public class HokanCore extends PircBot {
     @Override
     protected void onJoin(String channelName, String sender, String login, String hostname) {
         sendTopicQuery(channelName);
+        sendWhoQuery(channelName);
     }
 
     @Override
@@ -95,13 +96,37 @@ public class HokanCore extends PircBot {
         super.onPrivateMessage(sender, login, hostname, message, original);
     }
 
+    private Map<String, List<String>> whoReplies = new ConcurrentHashMap<>();
+
     @Override
     protected void onServerResponse(int code, String response) {
         if (code == RPL_NOTOPIC) {
-            log.debug("RPL_NOTOPIC response: {}", response);
             String split[] = response.split(" ");
             removeChannelTopic(split[1]);
+        } else if (code == RPL_WHOREPLY) {
+            String[] split = response.split(" ");
+            if (split.length >= 6) {
+                String channel = split[1].toLowerCase();
+                List<String> replies = whoReplies.get(channel);
+                if (replies == null) {
+                    replies = new ArrayList<>();
+                    whoReplies.put(channel, replies);
+                }
+                replies.add(response);
+            }
+        } else if (code == RPL_ENDOFWHO) {
+            String[] split = response.split(" ");
+            String channel = split[1].toLowerCase();
+            List<String> replies = whoReplies.remove(channel);
+            if (replies != null) {
+                handleEndOfWho(channel, replies);
+            }
+
         }
+    }
+
+    private void handleEndOfWho(String channel, List<String> replies) {
+        log.debug("End Of Who: {} - {}", channel, replies.size());
     }
 
     private void setChannelTopic(String channel, String topic) {
@@ -170,10 +195,17 @@ public class HokanCore extends PircBot {
         sendRawLineViaQueue("TOPIC " + channelName);
     }
 
+    private void sendWhoQuery(String channelName) {
+        sendRawLineViaQueue("WHO " + channelName);
+    }
 
     @Override
     public String toString() {
         return String.format("[%s] %s:%d", ircServerConfig.getNetwork(), ircServerConfig.getServer(), ircServerConfig.getPort());
     }
 
+    public boolean sendWhoChannel(String channel) {
+        sendWhoQuery(channel);
+        return true;
+    }
 }
