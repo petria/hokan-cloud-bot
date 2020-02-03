@@ -23,14 +23,14 @@ public interface IOIrcEngineResource {
 
     @RequestMapping(method = PUT, value = "/engine/{network}/{channel}/who")
     @ResponseBody
-    void putWhoChannel(@PathVariable("network") String network, @PathVariable("channel") String channel);
+    ServiceResponse putWhoChannel(@PathVariable("network") String network, @PathVariable("channel") String channel);
 
     @RequestMapping(method = PUT, value = "/engine/{network}/{channel}/join")
     @ResponseBody
-    void putJoinChannel(@PathVariable("network") String network, @PathVariable("channel") String channel);
+    ServiceResponse putJoinChannel(@PathVariable("network") String network, @PathVariable("channel") String channel);
 
     @RequestMapping(method = DELETE, value = "/engine/{network}/{channel}")
     @ResponseBody
-    void deleteChannel(@PathVariable("network") String network, @PathVariable("channel") String channel);
+    ServiceResponse deletePartChannel(@PathVariable("network") String network, @PathVariable("channel") String channel);
 
 }

@@ -31,4 +31,7 @@ public interface ConnectionManager {
 
     boolean sendWhoChannel(String network, String channel);
 
+    boolean joinChannel(String network, String channel);
+
+    boolean partChannel(String network, String channel);
 }

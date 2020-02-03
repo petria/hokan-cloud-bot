@@ -208,4 +208,15 @@ public class HokanCore extends PircBot {
         sendWhoQuery(channel);
         return true;
     }
+
+    public boolean joinNetworkChannel(String channel) {
+        joinChannel(channel);
+        return true;
+    }
+
+    public boolean partNetworkChannel(String channel) {
+        partChannel(channel);
+        return true;
+    }
+
 }

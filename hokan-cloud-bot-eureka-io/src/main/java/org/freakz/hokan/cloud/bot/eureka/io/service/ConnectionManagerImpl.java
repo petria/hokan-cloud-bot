@@ -171,4 +171,22 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
         }
         return false;
     }
+
+    @Override
+    public boolean joinChannel(String network, String channel) {
+        HokanCore core = runtimeService.findTargetCoreByNetwork(network);
+        if (core != null) {
+            return core.joinNetworkChannel(channel);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean partChannel(String network, String channel) {
+        HokanCore core = runtimeService.findTargetCoreByNetwork(network);
+        if (core != null) {
+            return core.partNetworkChannel(channel);
+        }
+        return false;
+    }
 }

@@ -10,13 +10,13 @@ import org.freakz.hokan.cloud.bot.common.model.io.ChannelUserModel;
 import org.freakz.hokan.cloud.bot.common.model.response.ChannelUsersPayload;
 import org.freakz.hokan.cloud.bot.common.model.response.JoinedChannelsPayload;
 import org.freakz.hokan.cloud.bot.common.model.response.ServiceResponse;
-import org.freakz.hokan.cloud.bot.common.util.StringUtil;
 import org.freakz.hokan.cloud.bot.eureka.io.service.ConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static org.freakz.hokan.cloud.bot.common.util.StringUtil.normalizeChannel;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -46,7 +46,7 @@ public class IOIrcEngineResourceController implements IOIrcEngineResource {
     @Override
     public ServiceResponse getChannelJoinedUsers(String network, String channel) {
         List<ChannelUserModel> payload
-                = connectionManager.getChannelUsers(network, StringUtil.normalizeChannel(channel));
+                = connectionManager.getChannelUsers(network, normalizeChannel(channel));
         ServiceResponse response = ServiceResponse.builder().build();
 
         if (payload != null) {
@@ -79,17 +79,54 @@ public class IOIrcEngineResourceController implements IOIrcEngineResource {
     }
 
     @Override
-    public void putWhoChannel(String network, String channel) {
-        connectionManager.sendWhoChannel(network, StringUtil.normalizeChannel(channel));
+    public ServiceResponse putWhoChannel(String network, String channel) {
+        boolean ok = connectionManager.sendWhoChannel(network, normalizeChannel(channel));
+        if (ok) {
+            return ServiceResponse.builder()
+                    .status(OK.value())
+                    .response("OK")
+                    .build();
+        } else {
+            return ServiceResponse.builder()
+                    .status(INTERNAL_SERVER_ERROR.value())
+                    .response("ERROR")
+                    .build();
+
+        }
     }
 
     @Override
-    public void putJoinChannel(String network, String channel) {
+    public ServiceResponse putJoinChannel(String network, String channel) {
+        boolean ok = connectionManager.joinChannel(network, normalizeChannel(channel));
+        if (ok) {
+            return ServiceResponse.builder()
+                    .status(OK.value())
+                    .response("OK")
+                    .build();
+        } else {
+            return ServiceResponse.builder()
+                    .status(INTERNAL_SERVER_ERROR.value())
+                    .response("ERROR")
+                    .build();
 
+        }
     }
 
     @Override
-    public void deleteChannel(String network, String channel) {
+    public ServiceResponse deletePartChannel(String network, String channel) {
+        boolean ok = connectionManager.partChannel(network, normalizeChannel(channel));
+        if (ok) {
+            return ServiceResponse.builder()
+                    .status(OK.value())
+                    .response("OK")
+                    .build();
+        } else {
+            return ServiceResponse.builder()
+                    .status(INTERNAL_SERVER_ERROR.value())
+                    .response("ERROR")
+                    .build();
+
+        }
 
     }
 }
