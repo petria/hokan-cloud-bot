@@ -19,7 +19,7 @@ public interface IOIrcEngineResource {
 
     @RequestMapping(method = POST, value = "/engine/post-message")
     @ResponseBody
-    void postMessageToIRC(@RequestBody MessageToIRCEvent messageToIRCEvent);
+    ServiceResponse postMessageToIRC(@RequestBody MessageToIRCEvent messageToIRCEvent);
 
     @RequestMapping(method = PUT, value = "/engine/{network}/{channel}/who")
     @ResponseBody

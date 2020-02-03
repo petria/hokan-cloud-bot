@@ -3,6 +3,7 @@ package org.freakz.hokan.cloud.bot.eureka.services.service;
 import lombok.extern.slf4j.Slf4j;
 import org.freakz.hokan.cloud.bot.common.model.event.MessageToIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.event.RawIRCEvent;
+import org.freakz.hokan.cloud.bot.common.model.response.ServiceResponse;
 import org.freakz.hokan.cloud.bot.eureka.services.client.IrcIOClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -52,7 +53,8 @@ public class CommandHandlerServiceServiceImpl implements CommandHandlerService {
         message.setMessage(reply);
         message.setTarget(target);
         message.setChannel(channel);
-        log.debug("Post reply!");
-        ircIOClient.postMessageToIRC(message);
+        ServiceResponse serviceResponse = ircIOClient.postMessageToIRC(message);
+        log.debug("Post reply: {}", serviceResponse.getStatus());
+
     }
 }

@@ -62,8 +62,20 @@ public class IOIrcEngineResourceController implements IOIrcEngineResource {
 
     @Override
     @HystrixCommand
-    public void postMessageToIRC(MessageToIRCEvent messageToIRCEvent) {
+    public ServiceResponse postMessageToIRC(MessageToIRCEvent messageToIRCEvent) {
         boolean ok = connectionManager.sendMessageToIRC(messageToIRCEvent);
+        if (ok) {
+            return ServiceResponse.builder()
+                    .status(OK.value())
+                    .response("OK")
+                    .build();
+        } else {
+            return ServiceResponse.builder()
+                    .status(INTERNAL_SERVER_ERROR.value())
+                    .response("ERROR")
+                    .build();
+
+        }
     }
 
     @Override
