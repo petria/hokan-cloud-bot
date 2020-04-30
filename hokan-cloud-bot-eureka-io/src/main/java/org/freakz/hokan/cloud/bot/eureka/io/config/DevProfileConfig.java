@@ -41,8 +41,8 @@ public class DevProfileConfig implements CommandLineRunner {
         network = networkRepository.save(network);
 
         config.setNetwork(network);
-        config.setServer("localhost");
-        config.setPort(1100);
+        config.setServer("irc.stealth.net");
+        config.setPort(6667);
         config.setIrcServerConfigState(IrcServerConfigState.CONNECTED);
 
         configRepository.save(config);

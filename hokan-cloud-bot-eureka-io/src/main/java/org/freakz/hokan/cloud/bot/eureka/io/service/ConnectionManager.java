@@ -5,7 +5,7 @@ import org.freakz.hokan.cloud.bot.common.model.event.RawIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.ChannelModel;
 import org.freakz.hokan.cloud.bot.common.model.io.ChannelUserModel;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
-import org.freakz.hokan.cloud.bot.eureka.io.ircengine.HokanCore;
+import org.freakz.hokan.cloud.bot.eureka.io.ircengine.HokanCoreNew;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public interface ConnectionManager {
     boolean sendMessageToIRC(MessageToIRCEvent messageToIRCEvent);
 
     // EVENT handlers
-    void coreConnected(HokanCore hokanCore);
+    void coreConnected(HokanCoreNew hokanCore);
 
     void publishRawIRCEvent(RawIRCEvent event);
 

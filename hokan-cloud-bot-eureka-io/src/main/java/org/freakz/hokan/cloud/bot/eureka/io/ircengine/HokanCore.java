@@ -47,7 +47,7 @@ public class HokanCore extends PircBot {
     @Override
     protected void onConnect() {
         log.debug("Connected!");
-        hokanCoreRuntimeService.coreConnected(this);
+//        hokanCoreRuntimeService.coreConnected(this);
     }
 
     private static long getAndStoreTransactionId() {
@@ -58,7 +58,7 @@ public class HokanCore extends PircBot {
 
     @Override
     protected void onDisconnect() {
-        hokanCoreRuntimeService.coreDisconnected(this);
+//        hokanCoreRuntimeService.coreDisconnected(this);
     }
 
     @Override

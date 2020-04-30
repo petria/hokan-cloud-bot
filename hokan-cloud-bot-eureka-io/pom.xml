@@ -12,6 +12,7 @@
     <properties>
         <hokan-cloud-bot-custom.version>1.0.0-SNAPSHOT</hokan-cloud-bot-custom.version>
         <hokan-cloud-bot-common-jpa.version>1.0.0-SNAPSHOT</hokan-cloud-bot-common-jpa.version>
+        <org.kitteh.irc.version>7.2.2</org.kitteh.irc.version>
     </properties>
 
 
@@ -52,6 +53,12 @@
             <groupId>org.freakz</groupId>
             <artifactId>hokan-cloud-bot-common-jpa</artifactId>
             <version>${hokan-cloud-bot-common-jpa.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.kitteh.irc</groupId>
+            <artifactId>client-lib</artifactId>
+            <version>${org.kitteh.irc.version}</version>
         </dependency>
 
         <!-- Hystric metrics -->

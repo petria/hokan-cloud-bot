@@ -2,7 +2,7 @@ package org.freakz.hokan.cloud.bot.eureka.io.service;
 
 import org.freakz.hokan.cloud.bot.common.model.event.RawIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
-import org.freakz.hokan.cloud.bot.eureka.io.ircengine.HokanCore;
+import org.freakz.hokan.cloud.bot.eureka.io.ircengine.HokanCoreNew;
 
 public interface HokanCoreRuntimeService {
 
@@ -10,17 +10,17 @@ public interface HokanCoreRuntimeService {
 
     boolean putOffline(IrcServerConfigModel config);
 
-    HokanCore findTargetCoreByNetwork(String network);
+    HokanCoreNew findTargetCoreByNetwork(String network);
 
-    HokanCore findTargetCore(String target);
+    HokanCoreNew findTargetCore(String target);
 
     void publishRawIRCEvent(RawIRCEvent event);
 
     boolean networkJoinChannel(String network, String channel);
 
     // Events Core -> Service
-    void coreConnected(HokanCore hokanCore);
+    void coreConnected(HokanCoreNew hokanCore);
 
-    void coreDisconnected(HokanCore hokanCore);
+    void coreDisconnected(HokanCoreNew hokanCore);
 
 }

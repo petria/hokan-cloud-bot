@@ -3,7 +3,7 @@ package org.freakz.hokan.cloud.bot.eureka.io.service;
 import lombok.extern.slf4j.Slf4j;
 import org.freakz.hokan.cloud.bot.common.model.event.RawIRCEvent;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
-import org.freakz.hokan.cloud.bot.eureka.io.ircengine.HokanCore;
+import org.freakz.hokan.cloud.bot.eureka.io.ircengine.HokanCoreNew;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,7 +14,9 @@ public class HokanCoreRuntimeServiceImpl implements HokanCoreRuntimeService {
 
     private final ConnectionManager connectionManager;
 
-    private final Map<String, HokanCore> instanceMap = new ConcurrentHashMap<>();
+//    private final Map<String, HokanCore> instanceMap = new ConcurrentHashMap<>();
+
+    private final Map<String, HokanCoreNew> instanceMapNew = new ConcurrentHashMap<>();
 
     //    @Autowired
     public HokanCoreRuntimeServiceImpl(ConnectionManager connectionManager) {
@@ -24,20 +26,20 @@ public class HokanCoreRuntimeServiceImpl implements HokanCoreRuntimeService {
     @Override
     public boolean putOnline(IrcServerConfigModel config) {
         String network = config.getNetwork();
-        HokanCore core = instanceMap.get(network);
+        HokanCoreNew core = instanceMapNew.get(network);
         if (core != null) {
             log.warn("Disconnecting existing instance: {}", core.toString());
             disconnectInstance(core);
         }
 
-        core = new HokanCore(config, "HokanCld", this);
+        core = new HokanCoreNew(config, this);
         try {
-            instanceMap.put(network, core);
-            core.connect(config.getServer(), config.getPort());
+            instanceMapNew.put(network, core);
+            core.connect("HokanCld");
             return true;
         } catch (Exception e) {
             log.error("Connect error", e);
-            instanceMap.remove(network);
+            instanceMapNew.remove(network);
             return false;
         }
 
@@ -45,7 +47,7 @@ public class HokanCoreRuntimeServiceImpl implements HokanCoreRuntimeService {
 
     @Override
     public boolean networkJoinChannel(String network, String channel) {
-        HokanCore core = instanceMap.get(network);
+        HokanCoreNew core = instanceMapNew.get(network);
         if (core != null) {
             core.joinChannel(channel);
             return true;
@@ -56,7 +58,7 @@ public class HokanCoreRuntimeServiceImpl implements HokanCoreRuntimeService {
     @Override
     public boolean putOffline(IrcServerConfigModel config) {
         String network = config.getNetwork();
-        HokanCore core = instanceMap.remove(network);
+        HokanCoreNew core = instanceMapNew.remove(network);
         if (core != null) {
             disconnectInstance(core);
             return true;
@@ -67,8 +69,8 @@ public class HokanCoreRuntimeServiceImpl implements HokanCoreRuntimeService {
     }
 
     @Override
-    public HokanCore findTargetCoreByNetwork(String network) {
-        for (HokanCore core : instanceMap.values()) {
+    public HokanCoreNew findTargetCoreByNetwork(String network) {
+        for (HokanCoreNew core : instanceMapNew.values()) {
             if (core.getNetwork().equalsIgnoreCase(network)) {
                 return core;
             }
@@ -77,8 +79,8 @@ public class HokanCoreRuntimeServiceImpl implements HokanCoreRuntimeService {
     }
 
     @Override
-    public HokanCore findTargetCore(String target) {
-        for (HokanCore core : instanceMap.values()) {
+    public HokanCoreNew findTargetCore(String target) {
+        for (HokanCoreNew core : instanceMapNew.values()) {
             if (core.getUniqueIdent().equals(target)) {
                 return core;
             }
@@ -86,10 +88,10 @@ public class HokanCoreRuntimeServiceImpl implements HokanCoreRuntimeService {
         return null;
     }
 
-    private void disconnectInstance(HokanCore instance) {
+    private void disconnectInstance(HokanCoreNew instance) {
         try {
             instance.disconnect();
-            instance.dispose();
+//            instance.dispose();
         } catch (Exception e) {
             log.error("disconnect", e);
         }
@@ -102,12 +104,12 @@ public class HokanCoreRuntimeServiceImpl implements HokanCoreRuntimeService {
 
     // EVENT HANDLERS
     @Override
-    public void coreDisconnected(HokanCore hokanCore) {
+    public void coreDisconnected(HokanCoreNew hokanCore) {
         disconnectInstance(hokanCore);
     }
 
     @Override
-    public void coreConnected(HokanCore hokanCore) {
+    public void coreConnected(HokanCoreNew hokanCore) {
         connectionManager.coreConnected(hokanCore);
     }
 }

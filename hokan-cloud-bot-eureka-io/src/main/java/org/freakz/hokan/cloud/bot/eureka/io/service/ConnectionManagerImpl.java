@@ -11,7 +11,7 @@ import org.freakz.hokan.cloud.bot.common.model.io.ChannelModel;
 import org.freakz.hokan.cloud.bot.common.model.io.ChannelUserModel;
 import org.freakz.hokan.cloud.bot.common.model.io.IrcServerConfigModel;
 import org.freakz.hokan.cloud.bot.eureka.io.client.IrcEngineClient;
-import org.freakz.hokan.cloud.bot.eureka.io.ircengine.HokanCore;
+import org.freakz.hokan.cloud.bot.eureka.io.ircengine.HokanCoreNew;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -72,7 +72,7 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
     @Override
     @HystrixCommand()
     public boolean sendMessageToIRC(MessageToIRCEvent messageToIRCEvent) {
-        HokanCore core = runtimeService.findTargetCore(messageToIRCEvent.getTarget());
+        HokanCoreNew core = runtimeService.findTargetCore(messageToIRCEvent.getTarget());
         if (core != null) {
             return core.sendMessageToIRC(messageToIRCEvent);
         } else {
@@ -108,7 +108,6 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
             if (config.getIrcServerConfigState() == IrcServerConfigState.CONNECTED) {
                 log.debug("STARTUP: Connecting config: {}", config.toString());
                 putOnline(config.getNetwork().getName());
-//                joinNetworkChannels(config.getNetwork());
             }
         }
     }
@@ -125,7 +124,7 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
 
     @Override
     @HystrixCommand()
-    public void coreConnected(HokanCore hokanCore) {
+    public void coreConnected(HokanCoreNew hokanCore) {
         IrcServerConfig config = getConfig(hokanCore.getNetwork());
         if (config != null) {
             joinNetworkChannels(config.getNetwork());
@@ -147,7 +146,7 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
 
     @Override
     public List<ChannelModel> getJoinedChannels(String network) {
-        HokanCore core = runtimeService.findTargetCoreByNetwork(network);
+        HokanCoreNew core = runtimeService.findTargetCoreByNetwork(network);
         if (core != null) {
             return core.getJoinedChannels();
         }
@@ -156,7 +155,7 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
 
     @Override
     public List<ChannelUserModel> getChannelUsers(String network, String channel) {
-        HokanCore core = runtimeService.findTargetCoreByNetwork(network);
+        HokanCoreNew core = runtimeService.findTargetCoreByNetwork(network);
         if (core != null) {
             return core.getChannelUsers(channel);
         }
@@ -165,7 +164,7 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
 
     @Override
     public boolean sendWhoChannel(String network, String channel) {
-        HokanCore core = runtimeService.findTargetCoreByNetwork(network);
+        HokanCoreNew core = runtimeService.findTargetCoreByNetwork(network);
         if (core != null) {
             return core.sendWhoChannel(channel);
         }
@@ -174,7 +173,7 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
 
     @Override
     public boolean joinChannel(String network, String channel) {
-        HokanCore core = runtimeService.findTargetCoreByNetwork(network);
+        HokanCoreNew core = runtimeService.findTargetCoreByNetwork(network);
         if (core != null) {
             return core.joinNetworkChannel(channel);
         }
@@ -183,7 +182,7 @@ public class ConnectionManagerImpl implements ConnectionManager, CommandLineRunn
 
     @Override
     public boolean partChannel(String network, String channel) {
-        HokanCore core = runtimeService.findTargetCoreByNetwork(network);
+        HokanCoreNew core = runtimeService.findTargetCoreByNetwork(network);
         if (core != null) {
             return core.partNetworkChannel(channel);
         }
