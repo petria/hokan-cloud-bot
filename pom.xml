@@ -1,68 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.freakz</groupId>
-    <artifactId>hokan-cloud-bot</artifactId>
-    <name>hokan-cloud-bot</name>
-    <version>1.0.0-SNAPSHOT</version>
+  <groupId>org.freakz</groupId>
+  <artifactId>hokan-cloud-bot</artifactId>
+  <name>hokan-cloud-bot</name>
+  <version>1.0.0-SNAPSHOT</version>
 
-    <packaging>pom</packaging>
+  <packaging>pom</packaging>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spring-cloud-dependencies.version>Greenwich.RELEASE</spring-cloud-dependencies.version>
-        <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
-        <java.version>8</java.version>
-        <lombok.version>1.18.10</lombok.version>
-    </properties>
+    <spring-cloud-dependencies.version>Greenwich.RELEASE</spring-cloud-dependencies.version>
+    <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
+    <java.version>8</java.version>
+    <lombok.version>1.18.10</lombok.version>
+  </properties>
 
-    <modules>
-        <module>hokan-cloud-bot-custom</module>
-        <module>hokan-cloud-bot-common</module>
-        <module>hokan-cloud-bot-common-jpa</module>
-        <module>hokan-cloud-bot-eureka-io</module>
-        <module>hokan-cloud-bot-eureka-engine</module>
-        <module>hokan-cloud-bot-eureka-services</module>
+  <modules>
+    <module>hokan-cloud-bot-custom</module>
+    <module>hokan-cloud-bot-common</module>
+    <module>hokan-cloud-bot-common-jpa</module>
+    <module>hokan-cloud-bot-eureka-io</module>
+    <module>hokan-cloud-bot-eureka-engine</module>
+    <module>hokan-cloud-bot-eureka-services</module>
+    <module>hokan-cloud-bot-eureka-server</module>
+    <module>hokan-cloud-bot-eureka-frontend</module>
+  </modules>
 
-        <module>hokan-cloud-bot-eureka-server</module>
-    </modules>
+  <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+    </dependency>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <version>${spring-boot.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <version>${spring-boot.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
 
-    <build>
-        <plugins>
-            <!--            <plugin>
-                            <groupId>org.springframework.boot</groupId>
-                            <artifactId>spring-boot-maven-plugin</artifactId>
-                        </plugin> -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <executable>true</executable>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+  <build>
+    <plugins>
+      <!--            <plugin>
+                      <groupId>org.springframework.boot</groupId>
+                      <artifactId>spring-boot-maven-plugin</artifactId>
+                  </plugin> -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <executable>true</executable>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
